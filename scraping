@@ -7,8 +7,8 @@ import json
 import schedule
 from bs4 import BeautifulSoup
 
-# Slackに通知を飛ばす用のURL
-WEB_HOOK_URL = "https://hooks.slack.com/services/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"
+# Slackに通知を飛ばす用のwebhookURLを指定
+WEB_HOOK_URL = ""
 
 #ログイン画面のURLを指定
 url = ""
