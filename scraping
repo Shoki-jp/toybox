@@ -1,0 +1,68 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+import time
+import requests
+import json
+import schedule
+from bs4 import BeautifulSoup
+
+# Slackに通知を飛ばす用のURL
+WEB_HOOK_URL = "https://hooks.slack.com/services/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"
+
+#URLを指定
+url = "https://www.e-license.jp/el25/pc/index.action?abc=rjQzPRpmRuY%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
+
+options = Options()
+options.add_argument('--headless')
+
+# Chromeを起動, executable_pathにはchromedriverのpathを指定する
+#driver = webdriver.Chrome(executable_path=" ", options=options)
+
+# ログインページを開く
+def job():
+    driver = webdriver.Chrome(executable_path=" ", options=options)
+    driver.get(url)
+
+    #入力欄の場所を指定し, idを入力する処理
+    try:
+        driver.find_element_by_id("").send_keys("")
+    except NoSuchElementException:
+        requests.post(WEB_HOOK_URL, data=json.dumps({
+        "text" : "エラーが発生しました",
+        }))
+
+    else:
+        driver.find_element_by_id("").send_keys("")
+        #ログインボタンを指定し, enter処理
+        driver.find_element_by_id("").send_keys(Keys.ENTER)
+
+        time.sleep(10)
+
+        soup = BeautifulSoup(driver.page_source, "lxml")
+        #空きがあるときのステータスを指定し,検知する
+        if "" in str(soup):
+            requests.post(WEB_HOOK_URL, data=json.dumps({
+            "text" : f"空きがあります。",
+            }))
+            
+            time.sleep(120)
+        else:
+            time.sleep(50)
+            
+def main():
+    i = 0
+    while True:
+        try:
+            job()
+            i += 1
+        except:
+            if i >= 10:
+                break
+            pass
+    
+schedule.every(1).minutes.do(main)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
