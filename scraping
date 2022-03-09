@@ -10,8 +10,8 @@ from bs4 import BeautifulSoup
 # Slackに通知を飛ばす用のURL
 WEB_HOOK_URL = "https://hooks.slack.com/services/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"
 
-#URLを指定
-url = "https://www.e-license.jp/el25/pc/index.action?abc=rjQzPRpmRuY%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
+#ログイン画面のURLを指定
+url = ""
 
 options = Options()
 options.add_argument('--headless')
